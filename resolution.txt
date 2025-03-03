@@ -1,0 +1,44 @@
+Set docker-compose.yaml
+
+
+Adjusted credential settings for connecting to the Postgres database of Airflow.
+The product's default settings recommend the following credentials:
+
+environment:
+      POSTGRES_USER: airflow  # Changed user to airflow, it was previously admin
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+
+This should take into account the connection string specified in the following line:
+
+AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+
+_______________________________________________________________________________________________
+Set DAG generation file (smooth.py)
+
+Changes in the Python DAG File:
+
+In the Python file where the DAG is defined, there was a minor syntax issue that caused the DAG to fail to load correctly. Specifically:
+
+The function definition for the DAG was missing a colon (:) at the end of the def smooth() line. This caused a SyntaxError when trying to parse the DAG.
+Original Code:
+
+def smooth()
+Corrected Code:
+
+def smooth():
+This change fixed the syntax error and allowed the DAG to be parsed and registered correctly by Airflow.
+
+Changes in the docker-compose.yml File:
+
+The docker-compose.yml file was initially configured with the wrong volume path for the Airflow DAGs directory. Specifically, it was mapped to a directory called ./dag, but the actual directory containing the DAG files was named ./dags. This caused Airflow to be unable to find the DAGs.
+
+Original Volume Mapping:
+
+volumes:
+  - ./dag:/opt/airflow/dags
+Corrected Volume Mapping:
+
+volumes:
+  - ./dags:/opt/airflow/dags
+This change ensures that the correct local directory (./dags) is mapped to the /opt/airflow/dags directory inside the Airflow container, allowing Airflow to access and load the DAGs as expected.

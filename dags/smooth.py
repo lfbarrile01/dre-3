@@ -1,5 +1,5 @@
 from airflow.decorators import dag
-from airflow.operators.smooth import SmoothOperator
+from airflow.operators.dummy_operator import DummyOperator #Substituindo por um operador padrão do Airflow.
 from datetime import datetime
 
 
@@ -9,8 +9,8 @@ from datetime import datetime
     catchup=False,
     tags=["smooth"],
 )
-def smooth()
-    video = SmoothOperator(
+def smooth(): #adicionando os : na definição da função
+    video = DummyOperator(
         task_id="youtube_video"
     )
 
